@@ -1,0 +1,6 @@
+bin
+venv
+
+.mypy_cache
+
+__pycache__
