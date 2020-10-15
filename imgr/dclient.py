@@ -26,13 +26,13 @@ def search_images(
     for row in rows:
         for tag in row.tags:
             image_id = row.id.split("sha256:")[1]
-            name, vsn = tag.split(":")
+            img_name, vsn = tag.split(":")
             imgs.append(Image(
                 image_id=image_id,
                 tag=vsn,
-                name=name
+                name=img_name
             ))
-    if not strict_match:
+    if not strict_match and name:
         name_match = f".*{name}.*"
         imgs = [
             im for im in imgs
