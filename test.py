@@ -1,10 +1,8 @@
-#!/usr/bin/env python3
-
-from imgr import parse
+import imgr
 
 
 def main():
-    parse()
+    imgr.parse()
     return
 
 
