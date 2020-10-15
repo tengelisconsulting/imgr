@@ -1,16 +1,23 @@
 """
 Options:
+  --format: Specify output format.  Options:
+     id: just print image id
+
   list: list images
     - If a subarg is given, a wildcard match against container names is performed.
-      ex. ->        imgr list bunt
+      ex.         imgr list bunt
     - Possible flags before args are:
       eq: equal match
-      ex. ->        imgr list eq ubuntu
+      ex.         imgr list eq ubuntu
+
+  keep-only: delete all images of a repository except a given tag
+    ex.           imgr keep-nnly ubuntu buster
 """
 import argparse
 from typing import Dict
 from typing import List
 
+from .dclient import rm_image
 from .dclient import search_images
 
 
@@ -45,8 +52,21 @@ def list_images(
     return "\n".join([str(im) for im in imgs])
 
 
-def keep_only():
-    return
+def keep_only(
+        args: List[str],
+        format_args: Dict[str, bool]
+) -> str:
+    name, tag = args
+    imgs = search_images(name=name)
+    keep = [im.image_id for im in imgs
+            if im.name == name and im.tag == tag]
+    if not keep:
+        return ""
+    keep_id = keep[0]
+    to_delete = [im.image_id for im in imgs
+                 if im.image_id != keep_id]
+    [rm_image(img_id) for img_id in to_delete]
+    return "\n".join(to_delete)
 
 
 CMDS = {

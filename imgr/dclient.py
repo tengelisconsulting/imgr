@@ -1,4 +1,5 @@
 import re
+from typing import List
 from typing import NamedTuple
 
 import docker
@@ -16,7 +17,7 @@ client = docker.from_env()
 def search_images(
         name: str = "",
         strict_match: bool = True
-):
+) -> List[Image]:
     rows = []
     if strict_match:
         rows = client.images.list(name=name)
@@ -39,3 +40,8 @@ def search_images(
             if re.search(name_match, im.name)
         ]
     return imgs
+
+
+def rm_image(image_id: str) -> None:
+    client.images.remove(image_id)
+    return
